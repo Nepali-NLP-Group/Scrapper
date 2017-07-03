@@ -93,7 +93,6 @@ class Scrapper:
                 # check if it the body is empty
                 # exclude the javascript inside <p></p> tag
                 if str(body.text.encode('ascii', 'ignore'))!=""  and 'script' not in str(body):
-                    print body.text
                     self.body +=body.text
             print ("Body : " + self.body)
 
