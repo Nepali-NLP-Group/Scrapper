@@ -32,7 +32,7 @@ Developed as a part of #Icodeformyभाषा project of Nepali NLP Group
 
 ### Running Script
 
-You can save this code as scrapetest.py and run it in your terminal using the command:
+You can run it in your terminal using the following command:
 
 $ python Scrapper.py http://kantipur.ekantipur.com कान्तिपुर
 
