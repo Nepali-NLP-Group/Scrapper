@@ -4,7 +4,6 @@ import bs4 as bs
 import urllib
 import re
 
-
 class ReadOnlyClass(type):
     def __setattr__(self, name, value):
         raise ValueError(name)
@@ -13,11 +12,11 @@ class ReadOnlyClass(type):
 class Scrapper:
     __metaclass__ = ReadOnlyClass
 
-    def __init__(self, news_link, source):
+    def __init__(self, news_link='', source=''):
         self.NEWS_LINK = news_link
         self.SOURCE = source
-        self.title = ''
-        self.body = ''
+        self.TITLE = ''
+        self.BODY = ''
 
     def extractContent(self):
         r = urllib.urlopen(self.NEWS_LINK).read()
@@ -46,8 +45,8 @@ class Scrapper:
         for key, value in categoryOriginal.items():
             if key not in categories.keys():
                 categories[key] = value
-
         self.extractHeadline(categories)
+
 
     # retrieve headline for each category
     def extractHeadline(self, categoryList):
@@ -76,7 +75,7 @@ class Scrapper:
         for index, headline in enumerate(headlineList):
             print ("*********************************** Headline : %s **********************************" % (index + 1))
             url = ''
-            url = url.join((self.NEWS_LINK, headline.encode('ascii', 'ignore')))
+            url = url.join((self.NEWS_LINK, headline))
             r = urllib.urlopen(url).read()
             soup = bs.BeautifulSoup(r)
 
@@ -84,17 +83,18 @@ class Scrapper:
 
             for title_ in title_source:
                 if title_.find({'h1', 'h2'}) is not None:
-                    self.title = title_.find({'h1', 'h2'}).text
+                    self.TITLE = title_.find({'h1', 'h2'}).text
 
             body_content = soup.find('div', {'class': 'content-wrapper'})
-            print ("Title : " + self.title)
-
+            print ("Title : " + self.TITLE)
+            scrapper = Scrapper()
             for body in body_content.find_all('p'):
                 # check if it the body is empty
                 # exclude the javascript inside <p></p> tag
                 if str(body.text.encode('ascii', 'ignore'))!=""  and 'script' not in str(body):
-                    self.body +=body.text
-            print ("Body : " + self.body)
+                    scrapper.BODY += body.text
+            self.BODY = scrapper.BODY
+            print ("Body : " + self.BODY)
 
 def main():
     news_link = sys.argv[1]
